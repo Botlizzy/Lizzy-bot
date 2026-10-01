@@ -13,5 +13,9 @@ if [ ! -f package.json ]; then
 fi
 
 printf '%s\n' "Installing Lizzy-bot dependencies in $SCRIPT_DIR..."
-npm install
+if [ -f package-lock.json ]; then
+  npm ci
+else
+  npm install
+fi
 printf '%s\n' "Installation complete. Start the bot with: cd '$SCRIPT_DIR' && npm start"

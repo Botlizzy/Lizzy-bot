@@ -94,7 +94,7 @@ This error means `npm` was run from Termux's home directory (`/data/data/com.ter
 
 ```bash
 cd ~/Lizzy-bot
-npm install
+test -d node_modules || npm ci
 npm start
 ```
 
@@ -104,7 +104,7 @@ If you have not cloned the repository yet, run:
 cd ~
 git clone https://github.com/Botlizzy/Lizzy-bot.git
 cd Lizzy-bot
-npm install
+test -d node_modules || npm ci
 npm start
 ```
 
@@ -112,6 +112,12 @@ You can also run the included setup script from any directory:
 
 ```bash
 bash ~/Lizzy-bot/termux-setup.sh
+```
+
+To start safely from any directory, use the launcher. It checks for `pino` and installs the locked dependencies if they are missing:
+
+```bash
+bash ~/Lizzy-bot/termux-start.sh
 ```
 
 Do not run `npm install` from `~` unless `package.json` is located there.
@@ -128,8 +134,10 @@ cd Lizzy-bot
 ### 2️⃣ Install dependencies
 
 ```bash
-npm install
+npm ci
 ```
+
+If `node index.js` reports `Cannot find module 'pino'`, run `npm ci` from inside `~/Lizzy-bot` before starting the bot. The `pino` dependency is already declared in `package.json` and `package-lock.json`.
 
 ### 3️⃣ Configure session
 
