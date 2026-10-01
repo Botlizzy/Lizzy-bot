@@ -2,15 +2,28 @@
  * Sticker Creation Utilities
  */
 
-const { Sticker, createSticker, StickerTypes } = require('wa-sticker-formatter');
-const sharp = require('sharp');
 const config = require('../config');
+const getSharp = require('./optionalSharp');
+
+let formatter;
+function getFormatter() {
+  if (formatter !== undefined) return formatter;
+  try {
+    formatter = require('wa-sticker-formatter');
+  } catch (error) {
+    formatter = null;
+  }
+  return formatter;
+}
 
 /**
  * Create sticker from image/video buffer
  */
 const createStickerBuffer = async (media, options = {}) => {
   try {
+    const formatter = getFormatter();
+    if (!formatter) throw new Error('wa-sticker-formatter is unavailable on this platform');
+    const { Sticker, StickerTypes } = formatter;
     const sticker = new Sticker(media, {
       pack: options.pack || config.packname,
       author: options.author || config.author,
@@ -31,6 +44,9 @@ const createStickerBuffer = async (media, options = {}) => {
  */
 const createCroppedSticker = async (media, options = {}) => {
   try {
+    const formatter = getFormatter();
+    if (!formatter) throw new Error('wa-sticker-formatter is unavailable on this platform');
+    const { Sticker, StickerTypes } = formatter;
     const sticker = new Sticker(media, {
       pack: options.pack || config.packname,
       author: options.author || config.author,
@@ -50,6 +66,9 @@ const createCroppedSticker = async (media, options = {}) => {
  */
 const createCircleSticker = async (media, options = {}) => {
   try {
+    const formatter = getFormatter();
+    if (!formatter) throw new Error('wa-sticker-formatter is unavailable on this platform');
+    const { Sticker, StickerTypes } = formatter;
     const sticker = new Sticker(media, {
       pack: options.pack || config.packname,
       author: options.author || config.author,
@@ -69,6 +88,8 @@ const createCircleSticker = async (media, options = {}) => {
  */
 const stickerToImage = async (stickerBuffer) => {
   try {
+    const sharp = getSharp();
+    if (!sharp) throw new Error('Sharp is unavailable on this platform');
     const imageBuffer = await sharp(stickerBuffer)
       .png()
       .toBuffer();

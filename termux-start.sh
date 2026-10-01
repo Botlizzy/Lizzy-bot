@@ -11,6 +11,11 @@ if [ ! -f package.json ]; then
   exit 1
 fi
 
+if ! command -v ffmpeg >/dev/null 2>&1; then
+  printf '%s\n' "Error: FFmpeg is required for media commands. Install it with: pkg install ffmpeg" >&2
+  exit 1
+fi
+
 if [ ! -d node_modules ] || ! node -e "require.resolve('pino')" >/dev/null 2>&1; then
   printf '%s\n' "Dependencies are missing; installing from package-lock.json..."
   npm ci

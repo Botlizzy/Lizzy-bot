@@ -5,7 +5,8 @@
 const fs = require('fs');
 const path = require('path');
 const { exec } = require('child_process');
-const ffmpegPath = require('ffmpeg-static');
+const ffmpegPath = require('./ffmpegPath');
+const getSharp = require('./optionalSharp');
 const { getTempDir, deleteTempFile } = require('./tempManager');
 
 /**
@@ -16,7 +17,8 @@ const { getTempDir, deleteTempFile } = require('./tempManager');
 async function webp2png(webpBuffer) {
   // Try using sharp first (better for static WebP)
   try {
-    const sharp = require('sharp');
+    const sharp = getSharp();
+    if (!sharp) throw new Error('Sharp is unavailable');
     return await sharp(webpBuffer)
       .png()
       .toBuffer();
@@ -108,13 +110,15 @@ async function webp2gif(webpBuffer) {
     if (frameCount === 0) {
       // Fallback: single frame WebP, extract using sharp
       console.log(`[webp2gif] No frames found, extracting single frame using sharp...`);
-      const sharp = require('sharp');
+      const sharp = getSharp();
+      if (!sharp) throw new Error('Sharp is unavailable');
       const pngBuffer = await sharp(webpBuffer).png().toBuffer();
       const framePath = path.join(framesDir, `frame_0000.png`);
       fs.writeFileSync(framePath, pngBuffer);
     } else {
       // Extract each frame
-      const sharp = require('sharp');
+      const sharp = getSharp();
+      if (!sharp) throw new Error('Sharp is unavailable');
       for (let i = 0; i < frameCount; i++) {
         const frame = img.frames[i];
         const frameBuffer = frame.buffer;
@@ -274,7 +278,8 @@ async function webp2mp4(webpBuffer) {
     }
     
     // Use sharp to extract frames from animated WebP by page number
-    const sharp = require('sharp');
+    const sharp = getSharp();
+    if (!sharp) throw new Error('Sharp is unavailable; install a platform build to convert animated WebP');
     
     // Get metadata to find number of pages (frames)
     const metadata = await sharp(webpBuffer).metadata();
@@ -371,4 +376,3 @@ module.exports = {
   webp2gif,
   webp2mp4
 };
-

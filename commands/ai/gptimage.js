@@ -7,7 +7,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 const { downloadMediaMessage } = require('@whiskeysockets/baileys');
 const { webp2png } = require('../../utils/webp2mp4');
-const sharp = require('sharp');
+const getSharp = require('../../utils/optionalSharp');
 
 const EDITIMG_API = 'https://restapis.xrizaldev.my.id/api/ai2/editimg';
 const UGUU_UPLOAD = 'https://uguu.se/upload';
@@ -110,6 +110,8 @@ module.exports = {
       // Check if it's already JPEG, if not convert
       let finalImageBuffer = imageBuffer;
       try {
+        const sharp = getSharp();
+        if (!sharp) throw new Error('Sharp is unavailable');
         const metadata = await sharp(imageBuffer).metadata();
         if (metadata.format !== 'jpeg' && metadata.format !== 'jpg') {
           // Convert to JPEG
@@ -198,4 +200,3 @@ module.exports = {
     }
   },
 };
-

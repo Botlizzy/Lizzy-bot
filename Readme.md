@@ -124,8 +124,6 @@ Do not run `npm install` from `~` unless `package.json` is located there.
 
 ### 1️⃣ Clone the repository
 
-### 1️⃣ Clone the repository
-
 ```bash
 git clone https://github.com/Botlizzy/Lizzy-bot.git
 cd Lizzy-bot
@@ -138,6 +136,26 @@ npm ci
 ```
 
 If `node index.js` reports `Cannot find module 'pino'`, run `npm ci` from inside `~/Lizzy-bot` before starting the bot. The `pino` dependency is already declared in `package.json` and `package-lock.json`.
+
+### Termux native prerequisites
+
+Install the system tools used by media commands:
+
+```bash
+pkg update
+pkg install nodejs git ffmpeg
+```
+
+This project uses Termux's system `ffmpeg`; it no longer downloads the incompatible `ffmpeg-static` binary. Sharp and the optional sticker formatter are loaded only when their platform binaries are available, so they cannot prevent the bot from starting.
+
+If npm reports `npm WARN cleanup ENOTEMPTY` after an interrupted install, reset only the local dependency directory and retry:
+
+```bash
+cd ~/Lizzy-bot
+rm -rf node_modules
+npm cache verify
+npm ci
+```
 
 ### 3️⃣ Configure session
 

@@ -45,7 +45,7 @@ async function writeExifImg(img, metadata) {
  */
 async function writeExifVid(videoBuffer, metadata) {
   const { packname } = metadata;
-  const ffmpegPath = require('ffmpeg-static');
+  const ffmpegPath = require('./ffmpegPath');
   const { spawn } = require('child_process');
   
   // Check file size
@@ -126,5 +126,4 @@ module.exports = {
   writeExifImg,
   writeExifVid
 };
-
 
