@@ -88,11 +88,41 @@ For a full step‑by‑step deployment tutorial (panels / VPS / Heroku), add or 
 
 ## 🛠 Local Setup
 
+### Termux: fix `npm ERR! ENOENT package.json`
+
+This error means `npm` was run from Termux's home directory (`/data/data/com.termux/files/home`) instead of the bot directory. `package.json` is in the repository root, so change into the repository before running npm:
+
+```bash
+cd ~/Lizzy-bot
+npm install
+npm start
+```
+
+If you have not cloned the repository yet, run:
+
+```bash
+cd ~
+git clone https://github.com/Botlizzy/Lizzy-bot.git
+cd Lizzy-bot
+npm install
+npm start
+```
+
+You can also run the included setup script from any directory:
+
+```bash
+bash ~/Lizzy-bot/termux-setup.sh
+```
+
+Do not run `npm install` from `~` unless `package.json` is located there.
+
+### 1️⃣ Clone the repository
+
 ### 1️⃣ Clone the repository
 
 ```bash
-git clone https://github.com/mruniquehacker/Knightbot-MD.git
-cd Knightbot-MD
+git clone https://github.com/Botlizzy/Lizzy-bot.git
+cd Lizzy-bot
 ```
 
 ### 2️⃣ Install dependencies
@@ -199,4 +229,3 @@ This project contains code from various open‑source projects and AI tools, inc
 
 - **Baileys** – MIT License  
 - Other libraries as listed in `package.json`
-
