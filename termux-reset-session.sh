@@ -16,6 +16,15 @@ else
   printf '%s\n' "No session directory found; starting a fresh pairing."
 fi
 
+if [ -f .session-id ]; then
+  backup_id="session-id-bad-mac-backup-$(date +%Y%m%d-%H%M%S)"
+  mv .session-id "$backup_id"
+  chmod 600 "$backup_id"
+  printf '%s\n' "Backed up the local session ID to: $backup_id"
+fi
+
+# config.js skips SESSION_ID/local .session-id while this flag is set.
+export RESET_SESSION=1
 unset SESSION_ID
 printf '%s\n' "Starting a fresh WhatsApp pairing."
 exec bash "$SCRIPT_DIR/termux-start.sh"

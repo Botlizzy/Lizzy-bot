@@ -169,7 +169,7 @@ export PAIRING_NUMBER=2348012345678
 bash termux-reset-session.sh
 ```
 
-Replace `2348012345678` with the bot phone number including country code, digits only. The script backs up the old `session` directory and prints a pairing code. In WhatsApp open **Linked devices → Link a device → Link with phone number instead**, then enter that code. After pairing, use the comma prefix (for example, `,menu`). Commands are restricted to the owner numbers in `config.js` while `selfMode` is enabled.
+Replace `2348012345678` with the bot phone number including country code, digits only. The script backs up the old `session` directory and prints a pairing code. In WhatsApp open **Linked devices → Link a device → Link with phone number instead**, then enter that code. After pairing, use the dot prefix (for example, `.menu`). If the terminal shows `Bad MAC` or `Failed to decrypt message`, stop the bot and run `bash termux-reset-session.sh` to back up the stale authentication state and start a fresh pairing. Commands are restricted to the owner numbers in `config.js` while `selfMode` is enabled.
 
 For normal starts, export the pairing number once per Termux session:
 
