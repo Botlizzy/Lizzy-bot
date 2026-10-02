@@ -12,6 +12,7 @@ module.exports = {
     prefix: ',',
     sessionName: 'session',
     sessionID: process.env.SESSION_ID || '',
+    pairingNumber: process.env.PAIRING_NUMBER || '', // Digits only, including country code
     newsletterJid: '120363428458439258@newsletter', // Newsletter JID for menu forwarding
     updateZipUrl: 'https://github.com/mruniquehacker/KnightBot-Mini/archive/refs/heads/main.zip', // URL to latest code zip for .update command
     

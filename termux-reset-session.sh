@@ -1,7 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 # Recover from Signal "Bad MAC" / "Failed to decrypt" errors without
-# permanently deleting the old authentication files.
+# permanently deleting the old authentication files. Pairing code is used
+# when PAIRING_NUMBER is set; otherwise Baileys falls back to QR.
 set -eu
 
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
@@ -16,5 +17,5 @@ else
 fi
 
 unset SESSION_ID
-printf '%s\n' "Starting a fresh WhatsApp pairing. Scan the QR code shown below."
+printf '%s\n' "Starting a fresh WhatsApp pairing."
 exec bash "$SCRIPT_DIR/termux-start.sh"

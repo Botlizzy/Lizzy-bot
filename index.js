@@ -218,6 +218,9 @@ async function startBot() {
     getMessage: async () => undefined // Don't load messages from store
   });
 
+  let pairingCodeRequested = false;
+  const pairingNumber = String(config.pairingNumber || '').replace(/\D/g, '');
+
   // Bind store to socket
   store.bind(sock.ev);
 
@@ -255,8 +258,23 @@ async function startBot() {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
-      console.log('\n\n📱 Scan this QR code with WhatsApp:\n');
-      qrcode.generate(qr, { small: true });
+      if (pairingNumber && !state.creds.registered && !pairingCodeRequested) {
+        pairingCodeRequested = true;
+        try {
+          // Give the socket a moment to finish connecting before requesting
+          // the code. The code is entered in WhatsApp > Linked devices.
+          await new Promise(resolve => setTimeout(resolve, 1500));
+          const pairingCode = await sock.requestPairingCode(pairingNumber);
+          console.log(`\n🔐 WhatsApp pairing code: ${pairingCode}`);
+          console.log('Open WhatsApp > Linked devices > Link a device > Link with phone number instead.\n');
+        } catch (error) {
+          pairingCodeRequested = false;
+          console.error('❌ Could not request WhatsApp pairing code:', error.message || error);
+        }
+      } else if (!pairingNumber) {
+        console.log('\n\n📱 Scan this QR code with WhatsApp:\n');
+        qrcode.generate(qr, { small: true });
+      }
     }
 
     if (connection === 'close') {

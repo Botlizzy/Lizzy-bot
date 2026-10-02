@@ -159,16 +159,27 @@ npm ci
 
 ### WhatsApp `Bad MAC` / `Failed to decrypt` recovery
 
-These messages mean the local Signal session is stale or corrupted, often after the same WhatsApp account was linked from another installation. Reset the session once and scan a new QR code:
+These messages mean the local Signal session is stale or corrupted, often after the same WhatsApp account was linked from another installation. Reset the session once and use a fresh pairing code:
 
 ```bash
 cd ~/Lizzy-bot
 git pull origin main
 unset SESSION_ID
+export PAIRING_NUMBER=2348012345678
 bash termux-reset-session.sh
 ```
 
-The script backs up the old `session` directory before starting. After pairing, use the comma prefix (for example, `,menu`). Commands are restricted to the owner numbers in `config.js` while `selfMode` is enabled.
+Replace `2348012345678` with the bot phone number including country code, digits only. The script backs up the old `session` directory and prints a pairing code. In WhatsApp open **Linked devices → Link a device → Link with phone number instead**, then enter that code. After pairing, use the comma prefix (for example, `,menu`). Commands are restricted to the owner numbers in `config.js` while `selfMode` is enabled.
+
+For normal starts, export the pairing number once per Termux session:
+
+```bash
+cd ~/Lizzy-bot
+export PAIRING_NUMBER=2348012345678
+bash termux-start.sh
+```
+
+If `PAIRING_NUMBER` is empty, the bot falls back to printing a QR code.
 
 ### 3️⃣ Configure session
 
