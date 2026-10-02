@@ -332,7 +332,10 @@ async function startBot() {
   };
 
   // Messages handler - Process only new messages
-  sock.ev.on('messages.upsert', ({ messages, type }) => {
+  sock.ev.on('messages.upsert', (payload = {}) => {
+    const messages = Array.isArray(payload.messages) ? payload.messages : [];
+    const type = payload.type;
+    console.log(`[event] messages.upsert type=${type || 'unknown'} count=${messages.length}`);
     // Only process "notify" type (new messages), skip "append" (old messages from history)
     if (type && type !== 'notify') return;
 

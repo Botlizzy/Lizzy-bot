@@ -21,7 +21,7 @@ const CACHE_TTL = 60000; // 1 minute cache
 
 // Load all commands
 const commands = loadCommands();
-
+console.log(`[commands] Loaded ${commands.size} commands`);
 const ANTIBADWORD_STICKER_PATH = path.join(__dirname, 'utils', 'galimatde.webp');
 const ANTIBADWORD_STICKER_AUTHOR = 'GALI MAT DE BSDK';
 let antibadwordStickerCache = null;
