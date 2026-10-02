@@ -3,6 +3,20 @@
  */
 
 const { downloadContentFromMessage } = require('@whiskeysockets/baileys');
+const config = require('../../config');
+
+const getOwnerJid = () => {
+  const configuredOwner = Array.isArray(config.ownerNumber)
+    ? config.ownerNumber[0]
+    : config.ownerNumber;
+  const owner = String(configuredOwner || '').trim();
+
+  if (!owner) {
+    throw new Error('No owner number is configured for VV delivery.');
+  }
+
+  return owner.includes('@') ? owner : `${owner.replace(/\D/g, '')}@s.whatsapp.net`;
+};
 
 module.exports = {
   name: 'viewonce',
@@ -13,7 +27,9 @@ module.exports = {
   
   async execute(sock, msg, args) {
     try {
-      const chatId = msg.key.remoteJid;
+      // VV is a private owner utility: never send its output back to the
+      // group/DM where the command was invoked.
+      const ownerJid = getOwnerJid();
 
       // Try to get contextInfo from different message types (reply can be from text, image, video, etc.)
       const ctx = msg.message?.extendedTextMessage?.contextInfo
@@ -24,9 +40,8 @@ module.exports = {
 
       if (!ctx?.quotedMessage || !ctx?.stanzaId) {
         return await sock.sendMessage(
-          chatId,
+          ownerJid,
           { text: '🗑️ Reply to a *view-once* message to reveal it.' },
-          { quoted: msg }
         );
       }
 
@@ -44,9 +59,8 @@ module.exports = {
 
       if (!hasViewOnce) {
         return await sock.sendMessage(
-          chatId,
+          ownerJid,
           { text: '❌ This is not a view-once message!' },
-          { quoted: msg }
         );
       }
 
@@ -82,9 +96,8 @@ module.exports = {
 
       if (!actualMsg || !mtype) {
         return await sock.sendMessage(
-          chatId,
+          ownerJid,
           { text: '❌ Unsupported view-once message type.' },
-          { quoted: msg }
         );
       }
 
@@ -109,45 +122,41 @@ module.exports = {
 
       if (/video/.test(mtype)) {
         await sock.sendMessage(
-          chatId,
+          ownerJid,
           {
             video: buffer,
             caption,
             mimetype: 'video/mp4'
-          },
-          { quoted: msg }
+          }
         );
       } else if (/image/.test(mtype)) {
         await sock.sendMessage(
-          chatId,
+          ownerJid,
           {
             image: buffer,
             caption,
             mimetype: 'image/jpeg'
-          },
-          { quoted: msg }
+          }
         );
       } else if (/audio/.test(mtype)) {
         await sock.sendMessage(
-          chatId,
+          ownerJid,
           {
             audio: buffer,
             ptt: true,
             mimetype: 'audio/ogg; codecs=opus'
-          },
-          { quoted: msg }
+          }
         );
       }
     } catch (error) {
       console.error('Error in viewonce command:', error);
       await sock.sendMessage(
-        msg.key.remoteJid,
+        getOwnerJid(),
         {
           text:
             '❌ Error processing view-once message: ' +
             (error.message || 'Unknown error')
-        },
-        { quoted: msg }
+        }
       );
     }
   }
