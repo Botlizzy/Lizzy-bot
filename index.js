@@ -168,8 +168,10 @@ async function startBot() {
   const sessionFolder = `./${config.sessionName}`;
   const sessionFile = path.join(sessionFolder, 'creds.json');
 
-  // Check if sessionID is provided and process KnightBot! format session
-  if (config.sessionID && config.sessionID.startsWith('KnightBot!')) {
+  // Hydrate the embedded session only when no local auth exists. This lets a
+  // fresh Pterodactyl pairing persist instead of being overwritten on restart.
+  const shouldHydrateSession = !fs.existsSync(sessionFile) || process.env.FORCE_SESSION_ID === '1';
+  if (shouldHydrateSession && config.sessionID && config.sessionID.startsWith('KnightBot!')) {
     try {
       const [header, b64data] = config.sessionID.split('!');
 

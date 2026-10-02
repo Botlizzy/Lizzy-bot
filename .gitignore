@@ -9,6 +9,7 @@
 # WhatsApp authentication state
 session/
 session-*/
+session-bad-mac-backup-*/
 
 # Local dependencies and runtime data
 node_modules/
