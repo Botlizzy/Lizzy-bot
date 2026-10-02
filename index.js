@@ -334,10 +334,10 @@ async function startBot() {
   // Messages handler - Process only new messages
   sock.ev.on('messages.upsert', ({ messages, type }) => {
     // Only process "notify" type (new messages), skip "append" (old messages from history)
-    if (type !== 'notify') return;
+    if (type && type !== 'notify') return;
 
     // Process messages in the array
-    for (const msg of messages) {
+    for (const msg of messages || []) {
       // Skip if message is invalid or missing key
       if (!msg.message || !msg.key?.id) continue;
 
@@ -345,6 +345,10 @@ async function startBot() {
       if (!from) {
         continue;
       }
+
+      // Keep a concise inbound-message trace in Termux so a connected bot is
+      // distinguishable from a bot that is actually receiving chat events.
+      console.log(`[message] ${from}${msg.key.fromMe ? ' (fromMe)' : ''} ${Object.keys(msg.message).join(',')}`);
 
       // Status updates are system JID messages, so handle them before the
       // normal-chat filter. This keeps AutoStatus functional.

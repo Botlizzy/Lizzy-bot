@@ -473,6 +473,10 @@ const handleMessage = async (sock, msg) => {
     
     // from already defined above in DM block check
     const sender = msg.key.fromMe ? sock.user.id.split(':')[0] + '@s.whatsapp.net' : msg.key.participant || msg.key.remoteJid;
+    // Messages sent by the linked WhatsApp account are authoritative owner
+    // messages even when WhatsApp reports a device/LID JID that is not present
+    // in the configured owner list.
+    const senderIsOwner = Boolean(msg.key.fromMe) || isOwner(sender);
     const isGroup = from.endsWith('@g.us'); // Should always be true now due to DM block above
     
     // Fetch group metadata immediately if it's a group
@@ -918,17 +922,17 @@ const handleMessage = async (sock, msg) => {
     }
     
     // Check self mode (private mode) - only owner can use commands
-    if (config.selfMode && !isOwner(sender)) {
+    if (config.selfMode && !senderIsOwner) {
       console.log(`[command] Rejected "${commandName}" from ${sender}: selfMode is enabled`);
       return;
     }
     
     // Permission checks
-    if (command.ownerOnly && !isOwner(sender)) {
+    if (command.ownerOnly && !senderIsOwner) {
       return sock.sendMessage(from, { text: config.messages.ownerOnly }, { quoted: msg });
     }
     
-    if (command.modOnly && !isMod(sender) && !isOwner(sender)) {
+    if (command.modOnly && !isMod(sender) && !senderIsOwner) {
       return sock.sendMessage(from, { text: '🔒 This command is only for moderators!' }, { quoted: msg });
     }
     
@@ -940,7 +944,7 @@ const handleMessage = async (sock, msg) => {
       return sock.sendMessage(from, { text: config.messages.privateOnly }, { quoted: msg });
     }
     
-    if (command.adminOnly && !(await isAdmin(sock, sender, from, groupMetadata)) && !isOwner(sender)) {
+    if (command.adminOnly && !(await isAdmin(sock, sender, from, groupMetadata)) && !senderIsOwner) {
       return sock.sendMessage(from, { text: config.messages.adminOnly }, { quoted: msg });
     }
     
@@ -964,7 +968,7 @@ const handleMessage = async (sock, msg) => {
       sender,
       isGroup,
       groupMetadata,
-      isOwner: isOwner(sender),
+      isOwner: senderIsOwner,
       isAdmin: await isAdmin(sock, sender, from, groupMetadata),
       isBotAdmin: await isBotAdmin(sock, from, groupMetadata),
       isMod: isMod(sender),
