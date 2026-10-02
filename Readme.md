@@ -181,6 +181,31 @@ bash termux-start.sh
 
 If `PAIRING_NUMBER` is empty, the bot falls back to printing a QR code.
 
+### Pterodactyl deployment
+
+Pterodactyl uses a separate startup path from Termux. Upload or clone this repository into the server, install dependencies once, and set the panel startup command to:
+
+```bash
+bash pterodactyl-start.sh
+```
+
+In **Pterodactyl → Startup → Variables**, add:
+
+```text
+PTERODACTYL_SESSION_ID=KnightBot!your_private_session_string
+```
+
+The panel variable is private and is intentionally not stored in GitHub. The launcher also accepts `SESSION_ID` as a fallback, but `PTERODACTYL_SESSION_ID` is recommended so the Pterodactyl deployment stays separate from Termux. The launcher sets `PTERODACTYL=1`, validates the session format, installs production dependencies when needed, and starts `index.js` in the foreground for the panel process monitor.
+
+For a Node.js Pterodactyl egg, use:
+
+```text
+Install command: npm ci --omit=dev
+Startup command: bash pterodactyl-start.sh
+```
+
+Do not paste the session string into `config.js`, a GitHub file, or a public startup command. Termux continues to use `.session-id` or `SESSION_ID` through `termux-start.sh`.
+
 ### 3️⃣ Configure session
 
 Set the session through an environment variable; do not commit session strings to GitHub:

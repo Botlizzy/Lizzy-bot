@@ -3,6 +3,8 @@
 .env.*
 !.env.example
 .session-id
+*.sqlite
+*.db
 
 # WhatsApp authentication state
 session/
