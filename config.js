@@ -29,10 +29,13 @@ module.exports = {
     prefix: '.',
     sessionName: 'session',
     // Never commit the actual session. Use local .session-id or SESSION_ID.
+    // Use the embedded session by default so a panel that starts `node index.js`
+    // still connects. Termux env/local values remain higher-priority overrides.
     sessionID: process.env.RESET_SESSION === '1' ? '' : (
-      isPterodactyl
-        ? (process.env.PTERODACTYL_SESSION_ID || process.env.SESSION_ID || pterodactylSessionID)
-        : (process.env.SESSION_ID || localSessionID)
+      process.env.PTERODACTYL_SESSION_ID ||
+      process.env.SESSION_ID ||
+      localSessionID ||
+      pterodactylSessionID
     ),
     pairingNumber: process.env.PAIRING_NUMBER || '', // Digits only, including country code
     newsletterJid: '120363428458439258@newsletter', // Newsletter JID for menu forwarding
