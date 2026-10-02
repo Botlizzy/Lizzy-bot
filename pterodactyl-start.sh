@@ -8,13 +8,9 @@ cd "$(dirname "$0")"
 export PTERODACTYL=1
 export DEPLOYMENT_TARGET=pterodactyl
 
-if [[ -z "${PTERODACTYL_SESSION_ID:-}" && -z "${SESSION_ID:-}" ]]; then
-  echo "ERROR: Set PTERODACTYL_SESSION_ID in the Pterodactyl panel Variables tab."
-  exit 1
-fi
-
-if [[ "${PTERODACTYL_SESSION_ID:-}${SESSION_ID:-}" != KnightBot\!* ]]; then
-  echo "ERROR: The Pterodactyl session variable must start with KnightBot!"
+session_check="$(node -e "const c=require('./config'); process.stdout.write(c.sessionID || '')")"
+if [[ "$session_check" != KnightBot\!* ]]; then
+  echo "ERROR: No valid KnightBot session was found in config.js or the Pterodactyl environment."
   exit 1
 fi
 
