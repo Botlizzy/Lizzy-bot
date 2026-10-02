@@ -46,6 +46,7 @@ module.exports = {
     
     // Bot Behavior
     selfMode: true, // Private mode - only owner can use commands
+    logIncomingMessages: false, // Keep panel console quiet while commands still run
     autoRead: false,
     autoTyping: true,
     autoBio: false,

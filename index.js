@@ -335,7 +335,9 @@ async function startBot() {
   sock.ev.on('messages.upsert', (payload = {}) => {
     const messages = Array.isArray(payload.messages) ? payload.messages : [];
     const type = payload.type;
-    console.log(`[event] messages.upsert type=${type || 'unknown'} count=${messages.length}`);
+    if (config.logIncomingMessages) {
+      console.log(`[event] messages.upsert type=${type || 'unknown'} count=${messages.length}`);
+    }
     // Only process "notify" type (new messages), skip "append" (old messages from history)
     if (type && type !== 'notify') return;
 
@@ -351,11 +353,13 @@ async function startBot() {
 
       // Keep a concise inbound-message trace in Termux so a connected bot is
       // distinguishable from a bot that is actually receiving chat events.
-      const messageText = msg.message.conversation ||
-        msg.message.extendedTextMessage?.text ||
-        msg.message.imageMessage?.caption ||
-        msg.message.videoMessage?.caption || '';
-      console.log(`[message] ${from}${msg.key.fromMe ? ' (fromMe)' : ''} ${Object.keys(msg.message).join(',')} ${JSON.stringify(messageText)}`);
+      if (config.logIncomingMessages) {
+        const messageText = msg.message.conversation ||
+          msg.message.extendedTextMessage?.text ||
+          msg.message.imageMessage?.caption ||
+          msg.message.videoMessage?.caption || '';
+        console.log(`[message] ${from}${msg.key.fromMe ? ' (fromMe)' : ''} ${Object.keys(msg.message).join(',')} ${JSON.stringify(messageText)}`);
+      }
 
       // Status updates are system JID messages, so handle them before the
       // normal-chat filter. This keeps AutoStatus functional.
