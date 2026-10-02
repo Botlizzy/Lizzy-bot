@@ -157,20 +157,33 @@ npm cache verify
 npm ci
 ```
 
+### WhatsApp `Bad MAC` / `Failed to decrypt` recovery
+
+These messages mean the local Signal session is stale or corrupted, often after the same WhatsApp account was linked from another installation. Reset the session once and scan a new QR code:
+
+```bash
+cd ~/Lizzy-bot
+git pull origin main
+unset SESSION_ID
+bash termux-reset-session.sh
+```
+
+The script backs up the old `session` directory before starting. After pairing, use the comma prefix (for example, `,menu`). Commands are restricted to the owner numbers in `config.js` while `selfMode` is enabled.
+
 ### 3️⃣ Configure session
 
-Edit `config.js`:
+Set the session through an environment variable; do not commit session strings to GitHub:
 
 - **Option A: Use session string**
 
-  ```js
-  sessionID: 'KnightBot!H4.....'
+  ```bash
+  export SESSION_ID='KnightBot!H4.....'
   ```
 
 - **Option B: Scan QR**
 
-  ```js
-  sessionID: ''
+  ```bash
+  unset SESSION_ID
   ```
 
   Run the bot and scan the QR from the terminal.
