@@ -912,10 +912,14 @@ const handleMessage = async (sock, msg) => {
     
     // Get command
     const command = commands.get(commandName);
-    if (!command) return;
+    if (!command) {
+      console.log(`[command] Unknown command "${commandName}" from ${sender}`);
+      return;
+    }
     
     // Check self mode (private mode) - only owner can use commands
     if (config.selfMode && !isOwner(sender)) {
+      console.log(`[command] Rejected "${commandName}" from ${sender}: selfMode is enabled`);
       return;
     }
     

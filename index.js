@@ -489,4 +489,3 @@ process.on('unhandledRejection', (err) => {
 });
 // Export store for use in commands
 module.exports = { store };
-```
