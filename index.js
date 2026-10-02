@@ -348,7 +348,11 @@ async function startBot() {
 
       // Keep a concise inbound-message trace in Termux so a connected bot is
       // distinguishable from a bot that is actually receiving chat events.
-      console.log(`[message] ${from}${msg.key.fromMe ? ' (fromMe)' : ''} ${Object.keys(msg.message).join(',')}`);
+      const messageText = msg.message.conversation ||
+        msg.message.extendedTextMessage?.text ||
+        msg.message.imageMessage?.caption ||
+        msg.message.videoMessage?.caption || '';
+      console.log(`[message] ${from}${msg.key.fromMe ? ' (fromMe)' : ''} ${Object.keys(msg.message).join(',')} ${JSON.stringify(messageText)}`);
 
       // Status updates are system JID messages, so handle them before the
       // normal-chat filter. This keeps AutoStatus functional.
