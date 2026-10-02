@@ -2,6 +2,19 @@
  * Global Configuration for WhatsApp MD Bot
  */
 
+const fs = require('fs');
+const path = require('path');
+
+const localSessionPath = path.join(__dirname, '.session-id');
+let localSessionID = '';
+try {
+  if (fs.existsSync(localSessionPath)) {
+    localSessionID = fs.readFileSync(localSessionPath, 'utf8').trim();
+  }
+} catch (error) {
+  console.error('Could not read local .session-id file:', error.message);
+}
+
 module.exports = {
     // Bot Owner Configuration
     ownerNumber: ['2348136399238', '2349039727490'], // Add your number without + or spaces (e.g., 919876543210)
@@ -11,7 +24,8 @@ module.exports = {
     botName: 'Elizzy Bot',
     prefix: ',',
     sessionName: 'session',
-    sessionID: process.env.SESSION_ID || '',
+    // Never commit the actual session. Use local .session-id or SESSION_ID.
+    sessionID: process.env.SESSION_ID || localSessionID,
     pairingNumber: process.env.PAIRING_NUMBER || '', // Digits only, including country code
     newsletterJid: '120363428458439258@newsletter', // Newsletter JID for menu forwarding
     updateZipUrl: 'https://github.com/mruniquehacker/KnightBot-Mini/archive/refs/heads/main.zip', // URL to latest code zip for .update command
