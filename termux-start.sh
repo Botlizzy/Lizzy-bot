@@ -6,6 +6,14 @@ set -eu
 SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
 cd "$SCRIPT_DIR"
 
+# Load private local settings without ever storing them in Git.
+if [ -f .env ]; then
+  set -a
+  # shellcheck disable=SC1091
+  . ./.env
+  set +a
+fi
+
 if [ ! -f package.json ]; then
   printf '%s\n' "Error: package.json was not found in $SCRIPT_DIR" >&2
   exit 1

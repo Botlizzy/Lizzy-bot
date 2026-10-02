@@ -1,0 +1,13 @@
+# Secrets and local environment
+.env
+.env.*
+!.env.example
+
+# WhatsApp authentication state
+session/
+session-*/
+
+# Local dependencies and runtime data
+node_modules/
+database/
+*.log
