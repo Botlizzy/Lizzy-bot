@@ -1,0 +1,78 @@
+```bash
+# ============================================
+# PM2 COMMANDS FOR WHATSAPP BOT IN TERMUX
+# ============================================
+
+# Install PM2 globally
+npm install pm2 -g
+
+# Start your bot with PM2 (run from your bot folder)
+pm2 start index.js --name "whatsapp-bot"
+
+# Save the current process list (so it survives reboots)
+pm2 save
+
+# ============================================
+# ACCESSING THE CONSOLE / LOGS
+# ============================================
+
+# View real-time logs for all processes
+pm2 logs
+
+# View logs for only your bot
+pm2 logs whatsapp-bot
+
+# View last 200 lines of logs
+pm2 logs --lines 200
+
+# View error logs only
+pm2 logs whatsapp-bot --error
+
+# Live monitoring dashboard (CPU / memory)
+pm2 monit
+
+# List all running processes
+pm2 list
+
+# Show detailed info about your bot
+pm2 show whatsapp-bot
+
+# ============================================
+# REDEPLOYING AFTER CODE CHANGES
+# ============================================
+
+# Restart the bot (use this after updating code)
+pm2 restart whatsapp-bot
+
+# Save the updated process list again
+pm2 save
+
+# ============================================
+# OTHER USEFUL COMMANDS
+# ============================================
+
+# Stop the bot
+pm2 stop whatsapp-bot
+
+# Start it again after stopping
+pm2 start whatsapp-bot
+
+# Delete the bot from PM2 list
+pm2 delete whatsapp-bot
+
+# Restart all processes
+pm2 restart all
+
+# ============================================
+# TERMUX BOOT SCRIPT (for auto-start on reboot)
+# ============================================
+# Create this file: ~/.termux/boot/start-bot
+# Contents:
+# -------------------------------------------------
+# #!/data/data/com.termux/files/usr/bin/sh
+# termux-wake-lock
+# pm2 resurrect
+# -------------------------------------------------
+# Then make it executable:
+chmod +x ~/.termux/boot/start-bot
+```
