@@ -364,17 +364,6 @@ async function startBot() {
       const msgId = msg.key.id;
       if (processedMessages.has(msgId)) continue;
 
-      // Timestamp validation: Only process messages within last 5 minutes
-      const MESSAGE_AGE_LIMIT = 5 * 60 * 1000; // 5 minutes in milliseconds
-      let messageAge = 0;
-      if (msg.messageTimestamp) {
-        messageAge = Date.now() - (msg.messageTimestamp * 1000);
-        if (messageAge > MESSAGE_AGE_LIMIT) {
-          // Message is too old, skip processing
-          continue;
-        }
-      }
-
       // Mark message as processed
       processedMessages.add(msgId);
 
