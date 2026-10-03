@@ -917,13 +917,17 @@ const handleMessage = async (sock, msg) => {
     // Get command
     const command = commands.get(commandName);
     if (!command) {
-      console.log(`[command] Unknown command "${commandName}" from ${sender}`);
+      if (config.logCommandActivity) {
+        console.log(`[command] Unknown command "${commandName}" from ${sender}`);
+      }
       return;
     }
     
     // Check self mode (private mode) - only owner can use commands
     if (config.selfMode && !senderIsOwner) {
-      console.log(`[command] Rejected "${commandName}" from ${sender}: selfMode is enabled`);
+      if (config.logCommandActivity) {
+        console.log(`[command] Rejected "${commandName}" from ${sender}: selfMode is enabled`);
+      }
       return;
     }
     
@@ -961,7 +965,9 @@ const handleMessage = async (sock, msg) => {
     }
     
     // Execute command
-    console.log(`Executing command: ${commandName} from ${sender}`);
+    if (config.logCommandActivity) {
+      console.log(`Executing command: ${commandName} from ${sender}`);
+    }
     
     await command.execute(sock, msg, args, {
       from,

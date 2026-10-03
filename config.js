@@ -47,6 +47,8 @@ module.exports = {
     // Bot Behavior
     selfMode: true, // Private mode - only owner can use commands
     logIncomingMessages: false, // Keep panel console quiet while commands still run
+    logCommandActivity: false, // Do not print command text, senders, or chat IDs
+    logStoreActivity: false, // Do not print chat-store counts
     autoRead: false,
     autoTyping: true,
     autoBio: false,

@@ -317,7 +317,9 @@ async function startBot() {
           store.messages.delete(jid);
         }
       }
-      console.log(`🧹 Store cleaned. Active chats: ${store.messages.size}`);
+      if (config.logStoreActivity) {
+        console.log(`🧹 Store cleaned. Active chats: ${store.messages.size}`);
+      }
     }
   });
 
